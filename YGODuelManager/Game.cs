@@ -76,7 +76,7 @@ namespace YGODuelManager
             {
                 State = state;
                 if (State == GameState.Starting)
-                    GameManager.RoomStart(this);
+                    AddonsManager.RoomStart(this);
             }
         }
 
@@ -98,7 +98,7 @@ namespace YGODuelManager
                 State = GameState.End;
             }
             else
-                GameManager.RoomLeft(this);
+                AddonsManager.RoomLeft(this);
         }
 
         private bool Created;
@@ -118,11 +118,11 @@ namespace YGODuelManager
                 //now a player has offically joined let everyone know
                 if (!Created)
                 {
-                    GameManager.RoomCreated(this);
+                    AddonsManager.RoomCreated(this);
                     Created = true;
                 }
                 else
-                    GameManager.RoomJoin(this);
+                    AddonsManager.RoomJoin(this);
             }
         }
 
@@ -134,11 +134,6 @@ namespace YGODuelManager
                 players.Add(player == null ? "???" : player.Name);
 
             return players.ToArray();
-        }
-
-        private void ResetGame()
-        {
-            //ToDo make core reusable
         }
 
         public void CloseCore()

@@ -26,12 +26,6 @@ namespace YGODuelManager
         private static Queue<int> _availablePorts = new Queue<int>();
         private static Queue<GameRequest> _requests = new Queue<GameRequest>();
 
-        public static event Action<object, EventArgs> OnRoomCreate;
-        public static event Action<object, EventArgs> OnPlayerJoin;
-        public static event Action<object, EventArgs> OnPlayerLeave;
-        public static event Action<object, EventArgs> OnRoomClose;
-        public static event Action<object, EventArgs> OnRoomStart;
-
         public static void Init()
         {
             Log.ServerLog("Generating available ports");
@@ -74,16 +68,16 @@ namespace YGODuelManager
         {
             if (Program.IsExiting)
             {
-                player.SendRoomMessage("[Shutting Down]");
+                //player.SendRoomMessage("[Shutting Down]");
                 return false;
             }
             if(_rooms.ContainsKey(info.GameName))
             {
-                player.SendRoomMessage("[Room Exists]");
+                //player.SendRoomMessage("[Room Exists]");
                 return false;
             }
 
-            player.SendRoomMessage("[Joining Game]");
+            //player.SendRoomMessage("[Joining Game]");
             lock (_requests)
                 _requests.Enqueue(new GameRequest(player, info));
 
@@ -94,44 +88,24 @@ namespace YGODuelManager
         {
             if (Program.IsExiting)
             {
-                player.SendRoomMessage("[Shutting Down]");
+                //player.SendRoomMessage("[Shutting Down]");
                 return null;
             }
 
             if (_rooms.ContainsKey(info.GameName))
             {
-                if (_rooms[info.GameName].CoreClosed)
-                    player.SendRoomMessage("[Game Finished]");
-                else
-                    return _rooms[info.GameName];
+                //if (_rooms[info.GameName].CoreClosed)
+                //    player.SendRoomMessage("[Game Finished]");
+                //else
+                //    return _rooms[info.GameName];
             }
             else
             {
-                player.SendRoomMessage("[Joining Game]");
+                //player.SendRoomMessage("[Joining Game]");
                 lock (_requests)
                     _requests.Enqueue(new GameRequest(player, info));
             }
             return null;
-        }
-
-        public static void RoomCreated(Game game)
-        {
-            OnRoomCreate?.Invoke(game, EventArgs.Empty);
-        }
-
-        public static void RoomStart(Game game)
-        {
-            OnRoomStart?.Invoke(game, EventArgs.Empty);
-        }
-
-        public static void RoomJoin(Game game)
-        {
-            OnPlayerJoin?.Invoke(game, EventArgs.Empty);
-        }
-
-        public static void RoomLeft(Game game)
-        {
-            OnPlayerLeave?.Invoke(game, EventArgs.Empty);
         }
 
         public static void Handle()
@@ -147,7 +121,7 @@ namespace YGODuelManager
                 if (_rooms.ContainsKey(game.Info.GameName))
                 {
                     _rooms.Remove(game.Info.GameName);
-                    OnRoomClose?.Invoke(game, EventArgs.Empty);
+                    AddonsManager.RoomClose(game);
                     Log.Write("Room Removed: " + game.Info.GameName);
                 }
 
@@ -174,7 +148,7 @@ namespace YGODuelManager
                     _rooms.Add(request.Info.GameName, game);
                     //Log.Write("Room Created: " + request.Info.GameName);
                 }
-                request.User.JoinGame(game);
+                //request.User.JoinGame(game);
             }
 
             //now all the rooms have been removed update the active ones

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using YGOSharp.Network;
 
@@ -100,7 +101,7 @@ namespace YGODuelManager
         {
             AddClient(new YGOClient(client));
 #if DEBUG
-            //Log.ServerLog("Client Connected: " + client.RemoteIPAddress);
+            Log.ServerLog("Client Connected: " + client.RemoteIPAddress);
 #endif
         }
     }
